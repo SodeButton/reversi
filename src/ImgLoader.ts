@@ -1,4 +1,4 @@
-import imgBoard from './assets/sprites/board_piece.png';
+import imgBoard from './assets/sprites/board.png';
 import imgBoardEdge from './assets/sprites/board_edge.png';
 
 export class ImgLoader {
