@@ -1,5 +1,6 @@
 import imgBoard from './assets/sprites/board.png';
 import imgBoardEdge from './assets/sprites/board_edge.png';
+import imgCursor from './assets/sprites/curusor.png';
 
 export class ImgLoader {
 	boards: { [key: string]: string };
@@ -7,6 +8,7 @@ export class ImgLoader {
 		this.boards = {
 			board: imgBoard,
 			board_edge: imgBoardEdge,
+			cursor: imgCursor,
 		};
 	}
 
@@ -17,8 +19,8 @@ export class ImgLoader {
 	loadBoard(scene: Phaser.Scene) {
 		Object.keys(this.boards).forEach((key) => {
 			scene.load.spritesheet(key, this.boards[key], {
-				frameWidth: 64,
-				frameHeight: 64,
+				frameWidth: 32,
+				frameHeight: 32,
 			});
 		});
 	}

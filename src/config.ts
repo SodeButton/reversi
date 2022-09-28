@@ -1,4 +1,4 @@
-const gameWidth = 704;
-const gameHeight = 704;
+const gameWidth = 32 * 10;
+const gameHeight = 32 * 10;
 
 export { gameWidth, gameHeight };
