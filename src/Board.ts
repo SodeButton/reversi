@@ -12,17 +12,7 @@ export class Board extends Phaser.GameObjects.Container {
 		this.setDepth(1);
 		this.setName('Board');
 
-		this.scene.add.image(16, 16, 'board_edge', 0);
-		this.scene.add.image(32 * 10 - 16, 16, 'board_edge', 2);
-		this.scene.add.image(16, 32 * 10 - 16, 'board_edge', 6);
-		this.scene.add.image(32 * 10 - 16, 32 * 10 - 16, 'board_edge', 8);
-
-		for (let i = 0; i < 8; i++) {
-			this.scene.add.image(i * 32 + 48, 16, 'board_edge', 1);
-			this.scene.add.image(i * 32 + 48, 32 * 10 - 16, 'board_edge', 7);
-			this.scene.add.image(16, i * 32 + 48, 'board_edge', 3);
-			this.scene.add.image(32 * 10 - 16, i * 32 + 48, 'board_edge', 5);
-		}
+		this.drawEdge();
 
 		for (let i = 0; i < 8; i++) {
 			this.boards[i] = new Array(8).fill(null);
@@ -30,6 +20,18 @@ export class Board extends Phaser.GameObjects.Container {
 			for (let j = 0; j < 8; j++) {
 				this.boards[i][j] = new BoardPiece(scene, i, j);
 				this.add(this.boards[i][j]);
+
+				this.boards[i][j].on('pointerdown', () => {
+					// TODO: Piece.tsにgetPiece、state
+
+					switch (this.pieces[i][j]?.state) {
+						case 'None':
+							this.pieces[i][j]?.changePiece(1);
+							console.log(nowPlayer);
+
+							break;
+					}
+				});
 			}
 		}
 	}
@@ -44,5 +46,19 @@ export class Board extends Phaser.GameObjects.Container {
 	getPiece(x: number, y: number): Piece | null {
 		if (0 > x || x >= 8 || 0 > y || y >= 8) return null;
 		return this.pieces[x][y];
+	}
+
+	private drawEdge(): void {
+		this.scene.add.image(16, 16, 'board_edge', 0);
+		this.scene.add.image(32 * 10 - 16, 16, 'board_edge', 2);
+		this.scene.add.image(16, 32 * 10 - 16, 'board_edge', 6);
+		this.scene.add.image(32 * 10 - 16, 32 * 10 - 16, 'board_edge', 8);
+
+		for (let i = 0; i < 8; i++) {
+			this.scene.add.image(i * 32 + 48, 16, 'board_edge', 1);
+			this.scene.add.image(i * 32 + 48, 32 * 10 - 16, 'board_edge', 7);
+			this.scene.add.image(16, i * 32 + 48, 'board_edge', 3);
+			this.scene.add.image(32 * 10 - 16, i * 32 + 48, 'board_edge', 5);
+		}
 	}
 }

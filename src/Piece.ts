@@ -37,17 +37,8 @@ export class Piece extends Phaser.GameObjects.Container {
 
 		this.add([this.shadow, this.main]);
 	}
-	switchState(state: string | number) {
-		this.setState(state);
-		switch (state) {
-			case 'up':
-				this.main.setPosition(0, 4);
-				this.shadow.setPosition(8, 12);
-				break;
-			case 'down':
-				this.main.setPosition(0, 0);
-				this.shadow.setPosition(4, 4);
-				break;
-		}
+
+	changePiece(frame: number) {
+		this.main.setFrame(frame);
 	}
 }
