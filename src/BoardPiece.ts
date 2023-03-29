@@ -13,11 +13,13 @@ export class BoardPiece extends Phaser.GameObjects.Image {
 		this.setDepth(1);
 		this.setOrigin(0);
 		this.setName('BoardPiece');
+		this.setState('None');
 
 		this.setInteractive();
-
+		/*
 		this.on('pointerdown', () => {
 			console.log('clicked!');
 		});
+		*/
 	}
 }

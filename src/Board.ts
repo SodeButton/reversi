@@ -4,7 +4,7 @@ import { Piece } from './Piece';
 
 export class Board extends Phaser.GameObjects.Container {
 	boards: BoardPiece[][] = new Array(8);
-	pieces: Piece[][] | null[][] = new Array(8);
+	pieces: Piece[][] = new Array(8);
 	constructor(scene: Phaser.Scene, x: number, y: number) {
 		super(scene, x, y);
 
@@ -14,6 +14,11 @@ export class Board extends Phaser.GameObjects.Container {
 
 		this.drawEdge();
 
+		this.initialize(scene);
+	}
+
+	initialize(scene: Phaser.Scene) {
+		this.removeAll();
 		for (let i = 0; i < 8; i++) {
 			this.boards[i] = new Array(8).fill(null);
 			this.pieces[i] = new Array(8).fill(null);
@@ -21,15 +26,34 @@ export class Board extends Phaser.GameObjects.Container {
 				this.boards[i][j] = new BoardPiece(scene, i, j);
 				this.add(this.boards[i][j]);
 
+				this.pieces[i][j] = new Piece(scene, i, j);
+
+				if ((i == 3 && j == 3) || (i == 4 && j == 4)) {
+					this.pieces[i][j].setState('White');
+					this.pieces[i][j].changePiece(1);
+				}
+				if ((i == 3 && j == 4) || (i == 4 && j == 3)) {
+					this.pieces[i][j].setState('Black');
+					this.pieces[i][j].changePiece(0);
+				}
+
 				this.boards[i][j].on('pointerdown', () => {
-					// TODO: Piece.tsにgetPiece、state
+					if (this.pieces[i][j].state == 'None') {
+						this.pieces[i][j].state = nowPlayer;
+						this.pieces[i][j].main.setFrame(1);
+						this.pieces[i][j].shadow.setFrame(1);
+						nowPlayer = nowPlayer == 'Black' ? 'White' : 'Black';
 
-					switch (this.pieces[i][j]?.state) {
-						case 'None':
-							this.pieces[i][j]?.changePiece(1);
-							console.log(nowPlayer);
-
-							break;
+						// case 'White':
+						// 	this.pieces[i][j].state = 'Black';
+						// 	this.pieces[i][j].main.setFrame(0);
+						// 	this.pieces[i][j].shadow.setFrame(0);
+						// 	break;
+						// case 'Black':
+						// 	this.pieces[i][j].state = 'White';
+						// 	this.pieces[i][j].main.setFrame(1);
+						// 	this.pieces[i][j].shadow.setFrame(1);
+						// 	break;
 					}
 				});
 			}
@@ -39,7 +63,7 @@ export class Board extends Phaser.GameObjects.Container {
 	capturePiece(x: number, y: number) {
 		if (this.getPiece(x, y) == null) return;
 		this.pieces[x][y]?.destroy();
-		this.pieces[x][y] = null;
+		// this.pieces[x][y] = null;
 		console.log(this.pieces[x][y]);
 	}
 

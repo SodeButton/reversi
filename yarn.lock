@@ -54,11 +54,6 @@
   "resolved" "https://registry.npmjs.org/email-addresses/-/email-addresses-3.1.0.tgz"
   "version" "3.1.0"
 
-"esbuild-windows-64@0.15.9":
-  "integrity" "sha512-zm7h91WUmlS4idMtjvCrEeNhlH7+TNOmqw5dJPJZrgFaxoFyqYG6CKDpdFCQXdyKpD5yvzaQBOMVTCBVKGZDEg=="
-  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.15.9.tgz"
-  "version" "0.15.9"
-
 "esbuild@^0.15.6":
   "integrity" "sha512-OnYr1rkMVxtmMHIAKZLMcEUlJmqcbxBz9QoBU8G9v455na0fuzlT/GLu6l+SRghrk0Mm2fSSciMmzV43Q8e0Gg=="
   "resolved" "https://registry.npmjs.org/esbuild/-/esbuild-0.15.9.tgz"

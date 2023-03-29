@@ -1,2 +1,2 @@
 declare module '*.png';
-declare let nowPlayer: string;
+declare var nowPlayer: string;
