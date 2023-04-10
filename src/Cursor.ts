@@ -6,9 +6,15 @@ export class Cursor extends Phaser.GameObjects.Image {
 		this.setDepth(1);
 		this.setOrigin(0);
 		this.setName('Cursor');
+
 		scene.input.on('pointerover', (pointer: Phaser.Input.Pointer) => {
-			this.x = Math.floor(pointer.x / 32) * 32;
-			this.y = Math.floor(pointer.y / 32) * 32;
+			this.followCursor(pointer)
 		});
+
+	}
+
+	 private followCursor(pointer: Phaser.Input.Pointer) {
+		this.x = Math.floor(pointer.x / 32) * 32;
+		this.y = Math.floor(pointer.y / 32) * 32;
 	}
 }

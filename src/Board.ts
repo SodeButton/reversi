@@ -36,26 +36,6 @@ export class Board extends Phaser.GameObjects.Container {
 					this.pieces[i][j].setState('Black');
 					this.pieces[i][j].changePiece(0);
 				}
-
-				this.boards[i][j].on('pointerdown', () => {
-					if (this.pieces[i][j].state == 'None') {
-						this.pieces[i][j].state = nowPlayer;
-						this.pieces[i][j].main.setFrame(1);
-						this.pieces[i][j].shadow.setFrame(1);
-						nowPlayer = nowPlayer == 'Black' ? 'White' : 'Black';
-
-						// case 'White':
-						// 	this.pieces[i][j].state = 'Black';
-						// 	this.pieces[i][j].main.setFrame(0);
-						// 	this.pieces[i][j].shadow.setFrame(0);
-						// 	break;
-						// case 'Black':
-						// 	this.pieces[i][j].state = 'White';
-						// 	this.pieces[i][j].main.setFrame(1);
-						// 	this.pieces[i][j].shadow.setFrame(1);
-						// 	break;
-					}
-				});
 			}
 		}
 	}
@@ -65,6 +45,16 @@ export class Board extends Phaser.GameObjects.Container {
 		this.pieces[x][y]?.destroy();
 		// this.pieces[x][y] = null;
 		console.log(this.pieces[x][y]);
+	}
+
+	public putPiece(x: number, y: number, color: number) {
+		if (0 > x || x >= 8 || 0 > y || y >= 8) return;
+
+		if (this.pieces[x][y].state == -1) {
+			this.pieces[x][y].state = color;
+			this.pieces[x][y].main.setFrame(color);
+			this.pieces[x][y].shadow.setFrame(color);
+		}
 	}
 
 	getPiece(x: number, y: number): Piece | null {

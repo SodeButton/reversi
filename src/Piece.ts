@@ -16,7 +16,7 @@ export class Piece extends Phaser.GameObjects.Container {
 		this.scene.add.existing(this);
 		this.setDepth(4);
 		this.setName(texture);
-		this.setState('None');
+		this.setState(-1);
 
 		this.main = this.scene.add.image(0, 0, texture, 2);
 

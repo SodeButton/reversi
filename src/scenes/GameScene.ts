@@ -32,9 +32,24 @@ export class GameScene extends Phaser.Scene {
 
 		this.cameras.main.fadeIn(1000, 0, 0, 0);
 		this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {});
+
+		this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+			this.putPiece(pointer);
+		});
 	}
 
-	private resetBoard() {}
+	private putPiece(pointer: Phaser.Input.Pointer) {
+		let x = Math.floor(pointer.x / 32) - 1;
+		let y = Math.floor(pointer.y / 32) - 1;
 
-	private managedTurn() {}
+		
+
+		console.log(x, y);
+
+		this.board.putPiece(x, y, 0);
+	}
+
+	// private resetBoard() {}
+
+	// private managedTurn() {}
 }
