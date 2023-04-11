@@ -5,6 +5,8 @@ import { Piece } from './Piece';
 export class Board extends Phaser.GameObjects.Container {
 	boards: BoardPiece[][] = new Array(8);
 	pieces: Piece[][] = new Array(8);
+	validMoves: {x: number, y: number}[] = [];
+
 	constructor(scene: Phaser.Scene, x: number, y: number) {
 		super(scene, x, y);
 
@@ -29,27 +31,70 @@ export class Board extends Phaser.GameObjects.Container {
 				this.pieces[i][j] = new Piece(scene, i, j);
 
 				if ((i == 3 && j == 3) || (i == 4 && j == 4)) {
-					this.pieces[i][j].setState('White');
+					this.pieces[i][j].setState(1);
 					this.pieces[i][j].changePiece(1);
 				}
 				if ((i == 3 && j == 4) || (i == 4 && j == 3)) {
-					this.pieces[i][j].setState('Black');
+					this.pieces[i][j].setState(0);
 					this.pieces[i][j].changePiece(0);
 				}
 			}
 		}
 	}
 
-	capturePiece(x: number, y: number) {
-		if (this.getPiece(x, y) == null) return;
-		this.pieces[x][y]?.destroy();
-		// this.pieces[x][y] = null;
-		console.log(this.pieces[x][y]);
+	public SearchValidMoves() {
+		this.validMoves = [];
+		for (let x = 0; x < 8; x++) {
+			for (let y = 0; y < 8; y++) {
+				if (this.pieces[x][y].state != -1) continue;
+
+				let valid = false;
+
+
+				for (let dx = -1; dx <= 1; dx++) {
+					for (let dy = -1; dy <= 1; dy++) {
+						if  (dx === 0 && dy === 0) continue;
+
+						let nx = x + dx;
+						let ny = y + dy;
+
+						if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) continue;
+
+						if (this.pieces[nx][ny].state != 1) continue; //相手のこまではない
+
+						while(1) {
+
+							nx += dx;
+							ny += dy;
+
+							if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) break;
+
+							if (this.pieces[nx][ny].state == 0) {
+								valid = true;
+								break;
+							}
+
+							if (this.pieces[nx][ny].state == -1) break;
+						}
+
+						if (valid) {
+							this.validMoves.push({x, y});
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		this.validMoves.forEach((validKey) => {
+			this.boards[validKey.x][validKey.y].state = "validMove";
+			this.boards[validKey.x][validKey.y].changeValid(1);
+		})
+
+
 	}
 
 	public putPiece(x: number, y: number, color: number) {
-		if (0 > x || x >= 8 || 0 > y || y >= 8) return;
-
 		if (this.pieces[x][y].state == -1) {
 			this.pieces[x][y].state = color;
 			this.pieces[x][y].main.setFrame(color);

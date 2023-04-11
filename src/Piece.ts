@@ -19,7 +19,6 @@ export class Piece extends Phaser.GameObjects.Container {
 		this.setState(-1);
 
 		this.main = this.scene.add.image(0, 0, texture, 2);
-
 		this.shadow = this.scene.add.image(4, 4, texture, 2);
 		this.shadow.tint = 0x000000;
 		this.shadow.setAlpha(0.6);

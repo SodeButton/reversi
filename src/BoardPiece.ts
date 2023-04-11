@@ -22,4 +22,9 @@ export class BoardPiece extends Phaser.GameObjects.Image {
 		});
 		*/
 	}
+
+	public changeValid(valid: any) {
+		this.setState(valid);
+		this.tint = 0x0000ff;
+	}
 }
