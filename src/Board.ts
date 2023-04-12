@@ -43,7 +43,12 @@ export class Board extends Phaser.GameObjects.Container {
 	}
 
 	public SearchValidMoves() {
+
+		this.validMoves.forEach((validKey) => {
+			this.boards[validKey.x][validKey.y].resetValid();
+		});
 		this.validMoves = [];
+
 		for (let x = 0; x < 8; x++) {
 			for (let y = 0; y < 8; y++) {
 				if (this.pieces[x][y].state != -1) continue;
@@ -87,11 +92,8 @@ export class Board extends Phaser.GameObjects.Container {
 		}
 
 		this.validMoves.forEach((validKey) => {
-			this.boards[validKey.x][validKey.y].state = "validMove";
 			this.boards[validKey.x][validKey.y].changeValid(1);
-		})
-
-
+		});
 	}
 
 	public putPiece(x: number, y: number, color: number) {

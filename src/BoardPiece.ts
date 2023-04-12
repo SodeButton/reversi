@@ -27,4 +27,9 @@ export class BoardPiece extends Phaser.GameObjects.Image {
 		this.setState(valid);
 		this.tint = 0x0000ff;
 	}
+
+	public resetValid() {
+		this.setState(-1);
+		this.tint = 0xffffff;
+	}
 }
