@@ -55,7 +55,7 @@ export class Board extends Phaser.GameObjects.Container {
 
 				if (this.pieces[nx][ny].state != enemy) continue; //相手のこまではない
 
-				let flipedPieces: Piece[] = [];
+				let flippedPieces: Piece[] = [];
 
 				while (1) {
 
@@ -69,8 +69,7 @@ export class Board extends Phaser.GameObjects.Container {
 					if (this.pieces[nx][ny].state == -1) break;
 
 					if (this.pieces[nx][ny].state == enemy) {
-						flipedPieces.push(this.pieces[nx][ny]);
-						// this.pieces[nx][ny].flipPiece();
+						flippedPieces.push(this.pieces[nx][ny]);
 					}
 
 					nx += dx;
@@ -78,7 +77,7 @@ export class Board extends Phaser.GameObjects.Container {
 				}
 
 				if (valid) {
-					flipedPieces.forEach((piece) => {
+					flippedPieces.forEach((piece) => {
 						piece.flipPiece();
 					})
 					break;
