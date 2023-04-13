@@ -1,6 +1,8 @@
 import * as Phaser from 'phaser';
 import { Board } from '../Board';
 import { Cursor } from '../Cursor';
+import { AI } from "../AI";
+
 // import { gameWidth, gameHeight } from '../config';
 // import { Piece } from '../Piece';
 
@@ -13,6 +15,7 @@ export class GameScene extends Phaser.Scene {
 	board!: Board;
 	cursor!: Cursor;
 	turnState!: TurnState;
+	ai!: AI;
 
 	constructor() {
 		super('gameScene');
@@ -30,6 +33,8 @@ export class GameScene extends Phaser.Scene {
 
 		this.cursor = new Cursor(this);
 
+		this.ai = new AI(this.board);
+
 		this.cameras.main.fadeIn(1000, 0, 0, 0);
 		this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {});
 
@@ -37,8 +42,9 @@ export class GameScene extends Phaser.Scene {
 			this.putPiece(pointer);
 		});
 
-		this.board.SearchValidMoves();
-		console.log(this.board.validMoves);
+		this.board.resetValidMoves();
+		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+		this.board.drawValidMoves();
 	}
 
 	private putPiece(pointer: Phaser.Input.Pointer) {
@@ -49,10 +55,21 @@ export class GameScene extends Phaser.Scene {
 
 		//this.turnState = this.turnState == TurnState.PLAYER ? TurnState.ENEMY : TurnState.PLAYER;
 
-		this.board.putPiece(x, y, this.turnState);
+		this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
 
-		this.board.SearchValidMoves();
-		console.log(this.board.validMoves);
+		this.ai.putPiece();
+		// おけるところをサーチ
+		this.board.resetValidMoves();
+		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+		this.board.drawValidMoves();
+
+		while (this.board.validMoves.length == 0) {
+			this.ai.putPiece();
+
+			this.board.resetValidMoves();
+			this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+			this.board.drawValidMoves();
+		}
 	}
 
 	// private resetBoard() {}

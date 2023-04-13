@@ -41,40 +41,78 @@ export class Board extends Phaser.GameObjects.Container {
 			}
 		}
 	}
+	public flipPieces(x: number, y: number, player: number, enemy: number) {
+		let valid = false;
 
-	public SearchValidMoves() {
+		for (let dx = -1; dx <= 1; dx++) {
+			for (let dy = -1; dy <= 1; dy++) {
+				if (dx === 0 && dy === 0) continue;
 
-		this.validMoves.forEach((validKey) => {
-			this.boards[validKey.x][validKey.y].resetValid();
-		});
-		this.validMoves = [];
+				let nx = x + dx;
+				let ny = y + dy;
 
+				if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) continue;
+
+				if (this.pieces[nx][ny].state != enemy) continue; //相手のこまではない
+
+				let flipedPieces: Piece[] = [];
+
+				while (1) {
+
+					if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) break;
+
+					if (this.pieces[nx][ny].state == player) {
+						valid = true;
+						break;
+					}
+
+					if (this.pieces[nx][ny].state == -1) break;
+
+					if (this.pieces[nx][ny].state == enemy) {
+						flipedPieces.push(this.pieces[nx][ny]);
+						// this.pieces[nx][ny].flipPiece();
+					}
+
+					nx += dx;
+					ny += dy;
+				}
+
+				if (valid) {
+					flipedPieces.forEach((piece) => {
+						piece.flipPiece();
+					})
+					break;
+				}
+			}
+		}
+	}
+
+	public SearchValidMoves(player: number, enemy: number) {
 		for (let x = 0; x < 8; x++) {
 			for (let y = 0; y < 8; y++) {
 				if (this.pieces[x][y].state != -1) continue;
 
 				let valid = false;
 
-
 				for (let dx = -1; dx <= 1; dx++) {
 					for (let dy = -1; dy <= 1; dy++) {
-						if  (dx === 0 && dy === 0) continue;
+						if (dx === 0 && dy === 0) continue;
 
 						let nx = x + dx;
 						let ny = y + dy;
 
 						if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) continue;
 
-						if (this.pieces[nx][ny].state != 1) continue; //相手のこまではない
+						if (this.pieces[nx][ny].state != enemy) continue; //相手のこまではない
 
-						while(1) {
+						while (1) {
 
 							nx += dx;
 							ny += dy;
 
 							if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) break;
 
-							if (this.pieces[nx][ny].state == 0) {
+							if (this.pieces[nx][ny].state == player) {
 								valid = true;
 								break;
 							}
@@ -90,17 +128,30 @@ export class Board extends Phaser.GameObjects.Container {
 				}
 			}
 		}
+	}
 
+	public drawValidMoves() {
 		this.validMoves.forEach((validKey) => {
 			this.boards[validKey.x][validKey.y].changeValid(1);
 		});
 	}
 
-	public putPiece(x: number, y: number, color: number) {
+	public resetValidMoves() {
+		this.validMoves.forEach((validKey) => {
+			this.boards[validKey.x][validKey.y].resetValid();
+		});
+		this.validMoves = [];
+	}
+
+
+
+	public putPiece(x: number, y: number, player: number, enemy: number) {
 		if (this.pieces[x][y].state == -1) {
-			this.pieces[x][y].state = color;
-			this.pieces[x][y].main.setFrame(color);
-			this.pieces[x][y].shadow.setFrame(color);
+			this.pieces[x][y].state = player;
+			this.pieces[x][y].main.setFrame(player);
+			this.pieces[x][y].shadow.setFrame(player);
+
+			this.flipPieces(x, y, player, enemy);
 		}
 	}
 

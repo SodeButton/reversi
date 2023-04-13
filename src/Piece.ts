@@ -27,8 +27,17 @@ export class Piece extends Phaser.GameObjects.Container {
 	}
 
 	changePiece(frame: number) {
+		this.setState(frame);
 		this.main.setFrame(frame);
 		this.shadow.setFrame(frame);
+	}
+
+	public flipPiece() {
+		if (this.state == 0) {
+			this.changePiece(1);
+		} else if (this.state == 1) {
+			this.changePiece(0);
+		}
 	}
 
 	getPiece() {
