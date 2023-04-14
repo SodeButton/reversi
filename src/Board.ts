@@ -131,8 +131,11 @@ export class Board extends Phaser.GameObjects.Container {
 
 	public drawValidMoves() {
 		this.validMoves.forEach((validKey) => {
+			this.boards[validKey.x][validKey.y].state = "validMove";
 			this.boards[validKey.x][validKey.y].changeValid(1);
-		});
+		})
+
+
 	}
 
 	public resetValidMoves() {

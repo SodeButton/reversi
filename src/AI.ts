@@ -25,7 +25,7 @@ export class AI {
 
             testBoard.boards[validMoves.x][validMoves.y].changeValid(1);
 
-            testBoard.SearchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
+            testBoard.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 
             if (minValidCount > testBoard.validMoves.length) {
                 minValidCount = testBoard.validMoves.length;
