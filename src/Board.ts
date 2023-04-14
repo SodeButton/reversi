@@ -41,7 +41,7 @@ export class Board extends Phaser.GameObjects.Container {
 			}
 		}
 	}
-	public flipPieces(x: number, y: number, player: number, enemy: number) {
+	public async flipPieces(x: number, y: number, player: number, enemy: number) {
 		let valid = false;
 
 		for (let dx = -1; dx <= 1; dx++) {
@@ -77,9 +77,10 @@ export class Board extends Phaser.GameObjects.Container {
 				}
 
 				if (valid) {
-					flippedPieces.forEach((piece) => {
-						piece.flipPiece();
-					})
+					for (const piece of flippedPieces) {
+						// piece.flipPiece();
+						await piece.flipAnimation();
+					}
 					break;
 				}
 			}
@@ -133,9 +134,7 @@ export class Board extends Phaser.GameObjects.Container {
 		this.validMoves.forEach((validKey) => {
 			this.boards[validKey.x][validKey.y].state = "validMove";
 			this.boards[validKey.x][validKey.y].changeValid(1);
-		})
-
-
+		});
 	}
 
 	public resetValidMoves() {
@@ -147,13 +146,13 @@ export class Board extends Phaser.GameObjects.Container {
 
 
 
-	public putPiece(x: number, y: number, player: number, enemy: number) {
+	public async putPiece(x: number, y: number, player: number, enemy: number) {
 		if (this.pieces[x][y].state == -1) {
 			this.pieces[x][y].state = player;
 			this.pieces[x][y].main.setFrame(player);
 			this.pieces[x][y].shadow.setFrame(player);
 
-			this.flipPieces(x, y, player, enemy);
+			await this.flipPieces(x, y, player, enemy);
 		}
 	}
 

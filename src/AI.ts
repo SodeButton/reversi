@@ -12,7 +12,7 @@ export class AI {
         this.board = board;
     }
 
-    public putPiece() {
+    public async putPiece() {
         this.board.resetValidMoves();
         this.board.SearchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
 
@@ -34,7 +34,6 @@ export class AI {
         });
 
         // put piece
-
-        this.board.putPiece(minNextValid.x, minNextValid.y, TurnState.ENEMY, TurnState.PLAYER);
+        await this.board.putPiece(minNextValid.x, minNextValid.y, TurnState.ENEMY, TurnState.PLAYER);
     }
 }

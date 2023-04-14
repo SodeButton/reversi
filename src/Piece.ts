@@ -40,6 +40,34 @@ export class Piece extends Phaser.GameObjects.Container {
 		}
 	}
 
+	async flipAnimation() {
+		let animTime = 0;
+		let timer = setInterval(() => {
+			if (animTime < 10)
+				this.setScale(1, 1 - animTime / 10);
+
+			if (animTime == 10) this.flipPiece();
+
+			if (animTime > 10 && animTime < 20) {
+				this.setScale(1, animTime / 10 - 1);
+			}
+
+			if (animTime >= 20) {
+				this.setScale(1, 1);
+				clearInterval(timer);
+			}
+
+			animTime ++;
+		}, 20);
+		await this.delay(500);
+	}
+
+	delay(ms: number) {
+		return new Promise(resolve => {
+			this.scene.time.delayedCall(ms, resolve, [], this);
+		});
+	}
+
 	getPiece() {
 		return this;
 	}

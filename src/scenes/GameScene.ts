@@ -39,37 +39,54 @@ export class GameScene extends Phaser.Scene {
 		this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {});
 
 		this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-			this.putPiece(pointer);
+			this.putPiece(pointer).then();
 		});
+
+		// this.board.pieces[3][3].flipAnimation().then();
 
 		this.board.resetValidMoves();
 		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		this.board.drawValidMoves();
 	}
 
-	private putPiece(pointer: Phaser.Input.Pointer) {
+	private async putPiece(pointer: Phaser.Input.Pointer) {
+		if (this.turnState == TurnState.ENEMY) return;
+
 		let x = Math.floor(pointer.x / 32) - 1;
 		let y = Math.floor(pointer.y / 32) - 1;
 
 		if (this.board.getPiece(x, y)?.state != -1) return;
+		if (this.board.boards[x][y].state == -1) return;
 
 		// this.turnState = this.turnState == TurnState.PLAYER ? TurnState.ENEMY : TurnState.PLAYER;
 
-		this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
+		this.board.resetValidMoves();
+		await this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
 
-		this.ai.putPiece();
-		// おけるところをサーチ
+		this.turnState = TurnState.ENEMY;
+
+		await this.delay(100);
+
+		await this.ai.putPiece();
+
 		this.board.resetValidMoves();
 		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
-		this.board.drawValidMoves();
 
 		while (this.board.validMoves.length == 0) {
-			this.ai.putPiece();
+			await this.ai.putPiece();
 
 			this.board.resetValidMoves();
 			this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
-			this.board.drawValidMoves();
 		}
+
+		this.board.drawValidMoves();
+		this.turnState = TurnState.PLAYER;
+	}
+
+	delay(ms: number): Promise<void> {
+		return new Promise(resolve => {
+			this.time.delayedCall(ms, resolve, [], this);
+		});
 	}
 
 	// private resetBoard() {}
