@@ -53,7 +53,7 @@ export class GameScene extends Phaser.Scene {
 
 		if (this.board.getPiece(x, y)?.state != -1) return;
 
-		//this.turnState = this.turnState == TurnState.PLAYER ? TurnState.ENEMY : TurnState.PLAYER;
+		// this.turnState = this.turnState == TurnState.PLAYER ? TurnState.ENEMY : TurnState.PLAYER;
 
 		this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
 
