@@ -19,9 +19,9 @@ export class AI {
         let minNextValid = this.board.validMoves[0];
 
         let minValidCount = 100;
+        let testBoard: Board = this.board;
 
         this.board.validMoves.forEach((validMoves) => {
-            let testBoard: Board = this.board;
 
             testBoard.boards[validMoves.x][validMoves.y].changeValid(1);
 
@@ -32,6 +32,8 @@ export class AI {
                 minNextValid = validMoves;
             }
         });
+
+        testBoard.resetValidMoves();
 
         // put piece
         await this.board.putPiece(minNextValid.x, minNextValid.y, TurnState.ENEMY, TurnState.PLAYER);

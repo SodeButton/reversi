@@ -42,7 +42,6 @@ export class Board extends Phaser.GameObjects.Container {
 		}
 	}
 	public async flipPieces(x: number, y: number, player: number, enemy: number) {
-		let valid = false;
 
 		for (let dx = -1; dx <= 1; dx++) {
 			for (let dy = -1; dy <= 1; dy++) {
@@ -56,6 +55,8 @@ export class Board extends Phaser.GameObjects.Container {
 				if (this.pieces[nx][ny].state != enemy) continue; //相手のこまではない
 
 				let flippedPieces: Piece[] = [];
+
+				let valid = false;
 
 				while (1) {
 
@@ -81,7 +82,6 @@ export class Board extends Phaser.GameObjects.Container {
 						// piece.flipPiece();
 						await piece.flipAnimation();
 					}
-					break;
 				}
 			}
 		}
@@ -92,7 +92,6 @@ export class Board extends Phaser.GameObjects.Container {
 			for (let y = 0; y < 8; y++) {
 				if (this.pieces[x][y].state != -1) continue;
 
-				let valid = false;
 
 				for (let dx = -1; dx <= 1; dx++) {
 					for (let dy = -1; dy <= 1; dy++) {
@@ -100,6 +99,7 @@ export class Board extends Phaser.GameObjects.Container {
 
 						let nx = x + dx;
 						let ny = y + dy;
+						let valid = false;
 
 						if (nx < 0 || ny < 0 || nx >= 8 || ny >= 8) continue;
 
@@ -148,9 +148,9 @@ export class Board extends Phaser.GameObjects.Container {
 
 	public async putPiece(x: number, y: number, player: number, enemy: number) {
 		if (this.pieces[x][y].state == -1) {
-			this.pieces[x][y].state = player;
-			this.pieces[x][y].main.setFrame(player);
-			this.pieces[x][y].shadow.setFrame(player);
+
+			this.pieces[x][y].changePiece(player);
+			this.pieces[x][y].playClickSE();
 
 			await this.flipPieces(x, y, player, enemy);
 		}

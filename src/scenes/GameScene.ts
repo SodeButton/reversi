@@ -58,28 +58,43 @@ export class GameScene extends Phaser.Scene {
 		if (this.board.getPiece(x, y)?.state != -1) return;
 		if (this.board.boards[x][y].state == -1) return;
 
-		// this.turnState = this.turnState == TurnState.PLAYER ? TurnState.ENEMY : TurnState.PLAYER;
-
 		this.board.resetValidMoves();
 		await this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
 
+
+		this.board.SearchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
+
+		if (this.board.validMoves.length == 0) {
+			await this.delay(200);
+			this.board.resetValidMoves();
+			this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+			this.board.drawValidMoves();
+
+			return;
+		}
+
 		this.turnState = TurnState.ENEMY;
 
-		await this.delay(100);
+		await this.delay(500);
 
 		await this.ai.putPiece();
 
-		this.board.resetValidMoves();
 		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+		while(this.board.validMoves.length == 0) {
 
-		while (this.board.validMoves.length == 0) {
+			await this.delay(500);
 			await this.ai.putPiece();
 
 			this.board.resetValidMoves();
 			this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		}
 
+		await this.delay(200);
+
+		this.board.resetValidMoves();
+		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		this.board.drawValidMoves();
+
 		this.turnState = TurnState.PLAYER;
 	}
 

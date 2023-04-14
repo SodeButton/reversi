@@ -1,2 +1,2 @@
 declare module '*.png';
-declare var nowPlayer: string;
+declare module "*.wav";

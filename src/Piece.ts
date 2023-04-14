@@ -3,6 +3,7 @@ import * as Phaser from 'phaser';
 export class Piece extends Phaser.GameObjects.Container {
 	main: Phaser.GameObjects.Image;
 	shadow: Phaser.GameObjects.Image;
+	clickSE: Phaser.Sound.BaseSound;
 	indexX: number;
 	indexY: number;
 
@@ -23,6 +24,8 @@ export class Piece extends Phaser.GameObjects.Container {
 		this.shadow.tint = 0x000000;
 		this.shadow.setAlpha(0.6);
 
+		this.clickSE = this.scene.sound.add("click_se");
+
 		this.add([this.shadow, this.main]);
 	}
 
@@ -30,6 +33,10 @@ export class Piece extends Phaser.GameObjects.Container {
 		this.setState(frame);
 		this.main.setFrame(frame);
 		this.shadow.setFrame(frame);
+	}
+
+	playClickSE() {
+		this.clickSE.play();
 	}
 
 	public flipPiece() {
@@ -54,12 +61,13 @@ export class Piece extends Phaser.GameObjects.Container {
 
 			if (animTime >= 20) {
 				this.setScale(1, 1);
+				this.playClickSE();
 				clearInterval(timer);
 			}
 
 			animTime ++;
 		}, 20);
-		await this.delay(500);
+		await this.delay(400);
 	}
 
 	delay(ms: number) {

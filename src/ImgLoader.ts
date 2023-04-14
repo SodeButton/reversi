@@ -3,8 +3,11 @@ import imgBoardEdge from './assets/sprites/board_edge.png';
 import imgStones from './assets/sprites/stones.png';
 import imgCursor from './assets/sprites/curusor.png';
 
+import seClick from "./assets/sounds/click.wav";
+
 export class ImgLoader {
 	boards: { [key: string]: string };
+	sounds: { [key: string]: string };
 	constructor() {
 		this.boards = {
 			board: imgBoard,
@@ -12,6 +15,9 @@ export class ImgLoader {
 			stones: imgStones,
 			cursor: imgCursor,
 		};
+		this.sounds = {
+			click_se: seClick,
+		}
 	}
 
 	loadAll(scene: Phaser.Scene) {
@@ -25,5 +31,10 @@ export class ImgLoader {
 				frameHeight: 32,
 			});
 		});
+
+		Object.keys(this.sounds).forEach((key) => {
+			scene.load.audio(key, this.sounds[key]);
+		});
+
 	}
 }
