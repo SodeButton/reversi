@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { Board } from '../Board';
 import { Cursor } from '../Cursor';
 import { AI } from "../AI";
+import {TextParticle} from "../TextParticle";
 
 // import { gameWidth, gameHeight } from '../config';
 // import { Piece } from '../Piece';
@@ -42,11 +43,11 @@ export class GameScene extends Phaser.Scene {
 			this.putPiece(pointer).then();
 		});
 
-		// this.board.pieces[3][3].flipAnimation().then();
 
 		this.board.resetValidMoves();
 		this.board.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		this.board.drawValidMoves();
+
 	}
 
 	calculateScore() {
@@ -71,6 +72,7 @@ export class GameScene extends Phaser.Scene {
 	}
 
 	private async putPiece(pointer: Phaser.Input.Pointer) {
+
 		if (this.turnState == TurnState.ENEMY) return;
 
 		let x = Math.floor(pointer.x / 32) - 1;
@@ -81,7 +83,6 @@ export class GameScene extends Phaser.Scene {
 
 		this.board.resetValidMoves();
 		await this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
-
 
 		this.board.searchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
 
@@ -120,6 +121,22 @@ export class GameScene extends Phaser.Scene {
 
 		let winner = this.calculateScore();
 		console.log(winner);
+	}
+
+	async countPieces() {
+		let playerScore = 0;
+		let enemyScore = 0;
+		for (let pieces of this.board.pieces) {
+			for (let piece of pieces) {
+				piece.main.tint = 0x770000;
+				if (piece.state == 0) playerScore++;
+				if (piece.state == 1) enemyScore++;
+				new TextParticle(this, piece.x, piece.y, playerScore.toString()).floatAnimation(-0.2);
+				await this.delay(100);
+
+			}
+		}
+		if (playerScore > enemyScore) console.log("勝ち");
 	}
 
 	delay(ms: number): Promise<void> {
