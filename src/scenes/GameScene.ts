@@ -45,8 +45,29 @@ export class GameScene extends Phaser.Scene {
 		// this.board.pieces[3][3].flipAnimation().then();
 
 		this.board.resetValidMoves();
-		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+		this.board.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		this.board.drawValidMoves();
+	}
+
+	calculateScore() {
+		let isFull = false;
+		let playerScore = 0;
+		let enemyScore = 0;
+		for (let pieces of this.board.pieces) {
+			for (let piece of pieces) {
+				if (piece.state == -1) return;
+				if (piece.state == 0) playerScore++;
+				if (piece.state == 1) enemyScore++;
+				isFull = true;
+			}
+		}
+
+		if (!isFull) return -2;
+
+		if (playerScore > enemyScore) return TurnState.PLAYER;
+		else if (playerScore < enemyScore) return TurnState.ENEMY;
+		else return -1;
+
 	}
 
 	private async putPiece(pointer: Phaser.Input.Pointer) {
@@ -62,12 +83,12 @@ export class GameScene extends Phaser.Scene {
 		await this.board.putPiece(x, y, TurnState.PLAYER, TurnState.ENEMY);
 
 
-		this.board.SearchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
+		this.board.searchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
 
 		if (this.board.validMoves.length == 0) {
 			await this.delay(200);
 			this.board.resetValidMoves();
-			this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+			this.board.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 			this.board.drawValidMoves();
 
 			return;
@@ -79,23 +100,26 @@ export class GameScene extends Phaser.Scene {
 
 		await this.ai.putPiece();
 
-		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+		this.board.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		while(this.board.validMoves.length == 0) {
 
 			await this.delay(500);
 			await this.ai.putPiece();
 
 			this.board.resetValidMoves();
-			this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+			this.board.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		}
 
 		await this.delay(200);
 
 		this.board.resetValidMoves();
-		this.board.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+		this.board.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 		this.board.drawValidMoves();
 
 		this.turnState = TurnState.PLAYER;
+
+		let winner = this.calculateScore();
+		console.log(winner);
 	}
 
 	delay(ms: number): Promise<void> {

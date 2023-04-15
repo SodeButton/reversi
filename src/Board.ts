@@ -31,11 +31,9 @@ export class Board extends Phaser.GameObjects.Container {
 				this.pieces[i][j] = new Piece(scene, i, j);
 
 				if ((i == 3 && j == 3) || (i == 4 && j == 4)) {
-					this.pieces[i][j].setState(1);
 					this.pieces[i][j].changePiece(1);
 				}
 				if ((i == 3 && j == 4) || (i == 4 && j == 3)) {
-					this.pieces[i][j].setState(0);
 					this.pieces[i][j].changePiece(0);
 				}
 			}
@@ -87,7 +85,7 @@ export class Board extends Phaser.GameObjects.Container {
 		}
 	}
 
-	public SearchValidMoves(player: number, enemy: number) {
+	public searchValidMoves(player: number, enemy: number) {
 		for (let x = 0; x < 8; x++) {
 			for (let y = 0; y < 8; y++) {
 				if (this.pieces[x][y].state != -1) continue;

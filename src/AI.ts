@@ -14,7 +14,7 @@ export class AI {
 
     public async putPiece() {
         this.board.resetValidMoves();
-        this.board.SearchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
+        this.board.searchValidMoves(TurnState.ENEMY, TurnState.PLAYER);
 
         let minNextValid = this.board.validMoves[0];
 
@@ -25,7 +25,7 @@ export class AI {
 
             testBoard.boards[validMoves.x][validMoves.y].changeValid(1);
 
-            testBoard.SearchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
+            testBoard.searchValidMoves(TurnState.PLAYER, TurnState.ENEMY);
 
             if (minValidCount > testBoard.validMoves.length) {
                 minValidCount = testBoard.validMoves.length;
